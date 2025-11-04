@@ -38,15 +38,6 @@
   </style>
 </head>
 <body>
-  <script>
-  fetch('/.auth/me')
-    .then(res => res.json())
-    .then(data => {
-      if (!data.clientPrincipal) {
-        window.location.href = '/.auth/login/aad';
-      }
-    });
-</script>
   <div class="container">
     <div class="checkmark">✅</div>
     <h1>Thank You for Your Consent!</h1>
@@ -54,5 +45,35 @@
     <p>We are currently working on setting up your new account. Once your account is ready, you'll receive a formal invitation via email. </p>    
     <p>We’re excited to welcome you to MentorcliQ and look forward to supporting your mentoring journey!</p>
   </div>
+  
+<script>
+    async function checkAuth() {
+      const res = await fetch('/.auth/me');
+      const data = await res.json();
+      const statusEl = document.getElementById('status');
+      const userInfoEl = document.getElementById('user-info');
+
+      if (!data.clientPrincipal) {
+        // Not authenticated, redirect to login
+        statusEl.textContent = 'Redirecting to login...';
+        window.location.href = '/.auth/login/aad';
+      } else {
+        // Authenticated
+        const user = data.clientPrincipal;
+        statusEl.textContent = 'You are logged in!';
+        document.getElementById('user-name').textContent = user.userDetails;
+        document.getElementById('user-id').textContent = user.userId;
+        document.getElementById('user-roles').textContent = user.userRoles.join(', ');
+        userInfoEl.classList.remove('hidden');
+      }
+    }
+
+    function logout() {
+      window.location.href = '/.auth/logout';
+    }
+
+    checkAuth();
+  </script>
+
 </body>
 </html>
