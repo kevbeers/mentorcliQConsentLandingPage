@@ -1,1 +1,13 @@
-{"routes":[{"route":"/*","allowedRoles":["anonymous"]}]}
+
+{
+  "routes": [
+    {
+      "route": "/public/*",
+      "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/*",
+      "allowedRoles": ["authenticated"]
+    }
+  ]
+}
